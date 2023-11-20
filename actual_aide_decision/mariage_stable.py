@@ -12,7 +12,11 @@ def generateurPref(nb_etu,nb_eco):
 #en entrée les listes qu'on peut obtenir en sortie de generateurPref
 def mariageStable(pref_etudiants, pref_ecole):
 
-  nb = len(pref_etudiants)
+  #on copie les listes pour garder les informations à l'extérieur
+  etu_copy = [x[:] for x in pref_etudiants]
+  eco_copy = [x[:] for x in pref_ecole]
+
+  nb = len(etu_copy)
   #liste d'attribution (index correspond à une ecole/eleve et valeur : 0 pas d'attribution, 1 : attribué)
   etudiant_attribution = [0]*nb
   ecole_attribution = [0]*nb
@@ -29,7 +33,7 @@ def mariageStable(pref_etudiants, pref_ecole):
     while etudiant_attribution[i] != 0:
       i+=1
     #on enlève son premier choix de la liste pour le traiter
-    w = pref_etudiants[i].pop(0)
+    w = etu_copy[i].pop(0)
 
     #on vérifie que ce choix soit disponible pour affecter l'etudiant
     if ecole_attribution[w-1] == 0:
@@ -46,7 +50,7 @@ def mariageStable(pref_etudiants, pref_ecole):
       # On doit regarder les préférences de l'école
       #Si l'ecole w préfère l'étudiant actuel à l'étudiant attribué
       #Sinon l'étudiant attribué et l'école garde leur affectation
-      if (pref_ecole[w-1].index(etudiant_attribue)>pref_ecole[w-1].index(i+1)):
+      if (eco_copy[w-1].index(etudiant_attribue)>eco_copy[w-1].index(i+1)):
 
         #on affecte et précise qu'ils ne sont pas disponibles
         final_affectation[w] = i+1
@@ -69,3 +73,5 @@ def printAffectation(affectation, nb):
     stringaffectation += buffer_affectation
     
   return stringaffectation
+
+

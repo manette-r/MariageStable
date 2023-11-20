@@ -4,6 +4,7 @@ from PIL import Image, ImageTk  # install pillow with pip: pip install pillow
 import random
 from tkinter import StringVar
 from mariage_stable import *;
+from satisfaction import * ; 
 class FirstPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -154,38 +155,29 @@ class ResultPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller 
 
-        label = tk.Label(self,text="Résultat admission !", font=("Aria Bold",40))
+        label = tk.Label(self,text="Résultat admission !", font=("Aria Bold",20))
         label.place(relx=0.5, rely=0.1, anchor='n')
         # Champs d'entrée
          
         label_choix_etudiants = tk.Label(self, text="Choix des étudiants : ")
-        label_choix_etudiants.place(relx=0.3, rely=0.35, anchor='center')
+        label_choix_etudiants.place(relx=0.15, rely=0.25, anchor='center')
 
         self.choix_etudiants = tk.Label(self, text=" choix ")
-        self.choix_etudiants.place(relx=0.6, rely=0.35, anchor='center')     
+        self.choix_etudiants.place(relx=0.3, rely=0.25 ,anchor='center')     
 
         label_choix_ecoles = tk.Label(self, text="Choix des écoles : ")
-        label_choix_ecoles.place(relx=0.3, rely=0.45, anchor='center')
+        label_choix_ecoles.place(relx=0.15, rely=0.35, anchor='center')
 
         self.choix_ecoles = tk.Label(self, text=" choix ")
-        self.choix_ecoles.place(relx=0.6, rely=0.45, anchor='center')    
+        self.choix_ecoles.place(relx=0.3, rely=0.35, anchor='center')    
 
         self.result_affectation = tk.Label(self, text=" résultats ")
-        self.result_affectation.place(relx=0.3, rely=0.65, anchor='center')  
+        self.result_affectation.place(relx=0.8, rely=0.25, anchor='center')  
 
-        #Initialisation des strings pour les afficher 
-        self.nb_pref = tk.IntVar()  
-        self.result_etudiants = tk.StringVar()
-        self.result_ecoles = tk.StringVar()
-          
-
-        result_label_etudiants = tk.Label(self,textvariable=self.result_etudiants) 
-        result_label_etudiants.place(x=10,y=300)
-        result_label_ecoles = tk.Label(self,textvariable=self.result_ecoles) 
-        result_label_ecoles.place(x=10,y=350)
      
         Button = tk.Button(self, text="Retour à la page principale", font=("Arial", 10), command=lambda: controller.show_frame(FirstPage))
         Button.place(relx=0.15, rely=0.9, anchor='s')
+
 
     def correct_label(self):
         etudiants_choix_string = self.controller.etudiants_choix
@@ -198,10 +190,16 @@ class ResultPage(tk.Frame):
         #on transforme les chaînes de caractères en liste de listes d'entiers 
         etudiants_choix = self.stringIntoList(etudiants_choix_string)
         ecoles_choix = self.stringIntoList(ecoles_choix_string)
-        nb_choix = len(ecoles_choix)
+        self.nb_choix = len(ecoles_choix)
         final_affectation = mariageStable(etudiants_choix, ecoles_choix)
-        string_affectation = printAffectation(final_affectation, nb_choix)
+        string_affectation = printAffectation(final_affectation, self.nb_choix)
         self.result_affectation.config(text=string_affectation) 
+
+        #satisfaction et ses tableaux 
+        satisfaction_etudiant, satisfaction_ecole = satisfaction_partiel(final_affectation, etudiants_choix, ecoles_choix, 1)
+        self.create_tab_satisfaction(self.nb_choix, [satisfaction_etudiant, satisfaction_ecole])
+
+
 
     def stringIntoList(self, str_ecole):
 
@@ -218,7 +216,33 @@ class ResultPage(tk.Frame):
                 list_choix.append(int(carac))
 
         return liste_choix_tt
-            
+    
+    def create_tab_satisfaction(self, nb_choix, satisfaction_result):
+
+        tableaux_colonne_titre = ["Etudiant", "Ecole"]
+        #Tableaux de satisfaction 
+        for i in range(3): 
+            for j in range(nb_choix+1):
+
+                if (i == 0  and j == 0):
+                    print("case vide")
+                elif(i == 0): #on construit la première ligne du tableau avec les numéros pour chaque étudiants/écoles
+                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10, 'bold'))
+                    self.t1.grid(row=i, column=j)
+                    self.t1.insert(tk.END , str(j))
+                elif(j == 0) : #on construit la première colonne avec Etudiants et Etablissements
+                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10, 'bold'))
+                    self.t1.grid(row=i, column=j)
+                    self.t1.insert(tk.END , tableaux_colonne_titre[i-1])
+                else : 
+                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10))
+                    self.t1.grid(row=i, column=j)
+                    self.t1.insert(tk.END , str(round(satisfaction_result[i-1][j-1], 2))) #on arrondi 
+        
+        #Tableaux de satisfaction 
+         
+
+        
 
 class Application(tk.Tk):
 
