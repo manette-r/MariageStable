@@ -75,3 +75,5 @@ p_eco = [[3,2,1], [2,3,1], [1,3,2]]
 s_etu,s_eco = satisfaction_partiel(dico, p_etu, p_eco, 2)
 s_etu,s_eco = satisfaction_binaire(dico, p_etu, p_eco)
 print(s_etu, s_eco)
+
+

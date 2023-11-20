@@ -5,6 +5,9 @@ from PIL import Image, ImageTk  # install pillow with pip: pip install pillow
 import random
 from mariage_stable import *;
 from satisfaction import * ; 
+import numpy as np 
+import matplotlib.pyplot as plt 
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 class FirstPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -346,31 +349,31 @@ class ResultPage(tk.Frame):
                                          text="Choix des étudiants : ",
                                          font=("Arial", 20),
                                          bg = color)
-        label_choix_etudiants.place(relx=0.3, rely=0.35, anchor='center')
+        label_choix_etudiants.place(relx=0.3, rely=0.3, anchor='center')
 
         self.choix_etudiants = tk.Label(self, 
                                         text=" choix ",
                                         font=("Arial", 20),
                                         bg = color)
-        self.choix_etudiants.place(relx=0.6, rely=0.35, anchor='center')     
+        self.choix_etudiants.place(relx=0.6, rely=0.3, anchor='center')     
 
         label_choix_ecoles = tk.Label(self, 
                                       text="Choix des écoles : ",
                                       font=("Arial", 20),
                                       bg = color)
-        label_choix_ecoles.place(relx=0.3, rely=0.45, anchor='center')
+        label_choix_ecoles.place(relx=0.3, rely=0.35, anchor='center')
 
         self.choix_ecoles = tk.Label(self, 
                                      text=" choix ",
                                      font=("Arial", 20),
                                      bg = color)
-        self.choix_ecoles.place(relx=0.6, rely=0.45, anchor='center')    
+        self.choix_ecoles.place(relx=0.6, rely=0.35, anchor='center')    
 
         self.result_affectation = tk.Label(self, 
                                            text=" résultats ",
                                            font=("Arial", 20),
                                            bg = color)
-        self.result_affectation.place(relx=0.3, rely=0.65, anchor='center')  
+        self.result_affectation.place(relx=0.3, rely=0.5, anchor='center')  
 
         Button = tk.Button(self, 
                            text="Retour à la page principale", 
@@ -397,8 +400,7 @@ class ResultPage(tk.Frame):
 
         #satisfaction et ses tableaux 
         satisfaction_etudiant, satisfaction_ecole = satisfaction_partiel(final_affectation, etudiants_choix, ecoles_choix, 1)
-        #self.create_tab_satisfaction(self.nb_choix, [satisfaction_etudiant, satisfaction_ecole])
-
+        self.plotSatisfaction(satisfaction_etudiant, satisfaction_ecole)
 
 
     def stringIntoList(self, str_ecole):
@@ -417,30 +419,24 @@ class ResultPage(tk.Frame):
 
         return liste_choix_tt
     
-    def create_tab_satisfaction(self, nb_choix, satisfaction_result):
+    
+    def plotSatisfaction(self, satisfaction_etu, satisfaction_eco):
 
-        tableaux_colonne_titre = ["Etudiant", "Ecole"]
-        #Tableaux de satisfaction 
-        for i in range(3): 
-            for j in range(nb_choix+1):
-
-                if (i == 0  and j == 0):
-                    print("case vide")
-                elif(i == 0): #on construit la première ligne du tableau avec les numéros pour chaque étudiants/écoles
-                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10, 'bold'))
-                    self.t1.grid(row=i, column=j)
-                    self.t1.insert(tk.END , str(j))
-                elif(j == 0) : #on construit la première colonne avec Etudiants et Etablissements
-                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10, 'bold'))
-                    self.t1.grid(row=i, column=j)
-                    self.t1.insert(tk.END , tableaux_colonne_titre[i-1])
-                else : 
-                    self.t1 = tk.Entry(self, fg='blue', font=('Arial', 10))
-                    self.t1.grid(row=i, column=j)
-                    self.t1.insert(tk.END , str(round(satisfaction_result[i-1][j-1], 2))) #on arrondi 
+        fig = plt.figure(figsize=(4, 4))
+        nb = len(satisfaction_eco)
+        concat_satif = satisfaction_etu+satisfaction_eco
+        ax = fig.add_subplot(111)
+        ax.set_xlabel('Participants')
+        ax.set_ylabel('Satisfaction')
+        ax.plot(list(range(1,nb+1)), satisfaction_etu, 'bo', label='étudiants')
+        ax.plot(list(range(nb+1,nb*2+1)), satisfaction_eco, 'ro', label='écoles')
+        ax.set_ylim([0,110])
+        ax.legend()
+        fig.subplots_adjust(bottom=0.3 , left=0.3)
         
-         
-
+        canvas = FigureCanvasTkAgg(fig, self)
+        canvas._tkcanvas.place(relx=0.5, rely=0.4)
+        
         
 class Application(tk.Tk):
 
