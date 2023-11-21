@@ -12,9 +12,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 class FirstPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
- 
-      
-        
         
         #chargment de la photo
         load = Image.open("photo4.jpg")
@@ -399,7 +396,7 @@ class ResultPage(tk.Frame):
         self.result_affectation.config(text=string_affectation) 
 
         #satisfaction et ses tableaux 
-        satisfaction_etudiant, satisfaction_ecole = satisfaction_partiel(final_affectation, etudiants_choix, ecoles_choix, 1)
+        satisfaction_etudiant, satisfaction_ecole = satisfaction_perso(final_affectation, etudiants_choix, ecoles_choix, 1)
         self.plotSatisfaction(satisfaction_etudiant, satisfaction_ecole)
 
 
@@ -424,7 +421,6 @@ class ResultPage(tk.Frame):
 
         fig = plt.figure(figsize=(4, 4))
         nb = len(satisfaction_eco)
-        concat_satif = satisfaction_etu+satisfaction_eco
         ax = fig.add_subplot(111)
         ax.set_xlabel('Participants')
         ax.set_ylabel('Satisfaction')
@@ -456,6 +452,7 @@ class Application(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
  
         self.show_frame(FirstPage)
+
     def show_frame(self, page):
         frame = self.frames[page]
         frame.tkraise()
