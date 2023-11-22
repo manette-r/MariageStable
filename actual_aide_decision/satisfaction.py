@@ -29,9 +29,15 @@ def satisfaction_perso (final_affectation, pref_etudiants, pref_ecoles, voeux_po
         elif voeux_ponderes == 2 : 
             s_etu = voeux_ponderes_quadratique(nb, pref_etu, affectation_etu)
             s_eco = voeux_ponderes_quadratique(nb, pref_eco, affectation_eco)
-        elif voeux_ponderes == 3 : 
-            satisfaction_etudiants.append(100) if pref_etu.index(affectation_etu) < mean else satisfaction_etudiants.append(0)
-            satisfaction_ecoles.append(100) if pref_eco.index(affectation_eco) < mean else satisfaction_ecoles.append(0)
+        elif voeux_ponderes == 3 :
+            if pref_etu.index(affectation_etu) < mean :
+                s_etu = 100
+            else :
+                s_etu = 0
+            if pref_eco.index(affectation_eco) < mean : 
+                s_eco = 100
+            else : 
+                s_eco = 0
 
         #satisfaction en pourcentage 
         satisfaction_etudiants.append(s_etu)
