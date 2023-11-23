@@ -161,7 +161,7 @@ def etude_popularite_alldiff(satif_mode, nb_personne):
     plt.ylabel("Ecoles")
     plt.xlabel("Satisfaction")
     plt.grid(axis="both", linewidth=1, color=("#e4eaea"))
-    title = "Satisfaction des écoles ayant un premier voeu différent"
+    title = "Satisfaction des écoles avec des étudiants ayant un premier voeu différent"
     plt.title(title)
     
     plt.show()
