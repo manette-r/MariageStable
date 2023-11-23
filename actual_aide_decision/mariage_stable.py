@@ -9,6 +9,32 @@ def generateurPref(nb_etu,nb_eco):
 
   return etudiants,ecole
 
+def generateurPrefAllDiff(nb_pers): 
+  etu,eco = generateurPref(nb_pers,nb_pers)
+
+  #AllDiff seulement pour le premier voeu des Etudiants
+  not_available = []
+  for i in range(nb_pers):
+      
+      if etu[i][0] in not_available: 
+          #alors on va changer le premier voeu avec le voeu suivant 
+          searching = True
+          j=1
+          while searching : 
+              if etu[i][j] in not_available : 
+                  j+=1
+              else :
+                  #on echange 
+                  buffer = etu[i][0]
+                  etu[i][0] = etu[i][j]
+                  etu[i][j] = buffer
+                  not_available.append(etu[i][j])
+                  searching = False
+
+      else : 
+          not_available.append(etu[i][0])
+  return etu, eco
+
 #en entrée les listes qu'on peut obtenir en sortie de generateurPref
 def mariageStable(pref_etudiants, pref_ecole):
 
