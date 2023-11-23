@@ -11,11 +11,9 @@ def generateurPref(nb_etu,nb_eco):
 
 def generateurPrefAllDiff(nb_pers): 
   etu,eco = generateurPref(nb_pers,nb_pers)
-
   #AllDiff seulement pour le premier voeu des Etudiants
   not_available = []
   for i in range(nb_pers):
-      
       if etu[i][0] in not_available: 
           #alors on va changer le premier voeu avec le voeu suivant 
           searching = True
@@ -28,7 +26,7 @@ def generateurPrefAllDiff(nb_pers):
                   buffer = etu[i][0]
                   etu[i][0] = etu[i][j]
                   etu[i][j] = buffer
-                  not_available.append(etu[i][j])
+                  not_available.append(etu[i][0])
                   searching = False
 
       else : 

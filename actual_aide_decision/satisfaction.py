@@ -138,7 +138,6 @@ def etude_popularite_alldiff(satif_mode, nb_personne):
     for k in range(3):
 
         etu,eco = generateurPrefAllDiff(nb_personne-1)
-
         f_affectation = mariageStable(etu, eco)
         #on obtient une moyenne pour chaque classe 
         satisfaction_etudiants, satisfaction_ecoles = satisfaction_perso (f_affectation, etu, eco, satif_mode)
